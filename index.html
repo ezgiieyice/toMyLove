@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>30 Günlük Sevgi</title>
+  <style>
+    :root{
+      --bg1:#0b1020; --bg2:#111a33;
+      --card: rgba(255,255,255,.08);
+      --stroke: rgba(255,255,255,.14);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.65);
+      --shadow: 0 18px 60px rgba(0,0,0,.35);
+      --r: 18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100vh;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      background: radial-gradient(900px 500px at 20% 10%, rgba(255,120,200,.18), transparent 60%),
+                  radial-gradient(800px 500px at 80% 20%, rgba(120,180,255,.18), transparent 55%),
+                  linear-gradient(180deg, var(--bg1), var(--bg2));
+      display:flex; align-items:center; justify-content:center;
+      padding:24px;
+    }
+    .wrap{width:min(980px, 100%); display:grid; gap:16px}
+    .top{
+      display:flex; gap:14px; align-items:stretch; flex-wrap:wrap;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--stroke);
+      border-radius:var(--r);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .hero{flex: 1 1 460px; padding:18px 18px 14px}
+    .side{flex: 0 0 320px; padding:18px}
+    h1{margin:0 0 6px; font-size:22px; letter-spacing:.2px}
+    .sub{color:var(--muted); font-size:14px; line-height:1.45}
+    .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:12px}
+    input{
+      flex:1 1 220px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.18);
+      color:var(--text);
+      border-radius:12px;
+      padding:11px 12px;
+      outline:none;
+    }
+    button{
+      border:1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.10);
+      color:var(--text);
+      padding:11px 12px;
+      border-radius:12px;
+      cursor:pointer;
+    }
+    button:hover{background: rgba(255,255,255,.14)}
+    .pill{
+      display:inline-flex; gap:8px; align-items:center;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.06);
+      padding:8px 10px; border-radius:999px;
+      font-size:12px; color:var(--muted);
+    }
+    .progress{
+      height:10px; border-radius:999px;
+      background: rgba(255,255,255,.08);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.14);
+      margin-top:12px;
+    }
+    .bar{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, rgba(255,140,210,.9), rgba(120,190,255,.9));
+    }
+
+    .main{display:grid; grid-template-columns: 1.3fr .7fr; gap:16px}
+    @media (max-width: 860px){ .main{grid-template-columns:1fr} .side{flex:1 1 320px}}
+
+    .message{padding:18px}
+    .dayTitle{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap}
+    .big{font-size:18px; margin:0}
+    .tag{font-size:12px; color:var(--muted)}
+    .text{
+      margin:12px 0 0;
+      font-size:16px;
+      line-height:1.65;
+      white-space:pre-wrap;
+    }
+
+    .days{padding:18px}
+    .grid{
+      display:grid; grid-template-columns: repeat(5, minmax(0,1fr));
+      gap:10px;
+    }
+    @media (max-width: 560px){ .grid{grid-template-columns: repeat(4, minmax(0,1fr));} }
+    .d{
+      padding:10px 10px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      display:flex; justify-content:center; align-items:center;
+      cursor:pointer;
+      user-select:none;
+      min-height:40px;
+    }
+    .d.locked{opacity:.45; cursor:not-allowed}
+    .d.active{
+      border-color: rgba(255,255,255,.35);
+      background: rgba(255,255,255,.12);
+    }
+
+    /* “Çiçek büyümesi” */
+    .flowerBox{display:flex; flex-direction:column; gap:10px}
+    .flower{
+      height:220px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.14);
+      background: radial-gradient(160px 120px at 30% 30%, rgba(255,120,200,.25), transparent 60%),
+                  radial-gradient(160px 120px at 70% 35%, rgba(120,180,255,.25), transparent 60%),
+                  rgba(255,255,255,.05);
+      position:relative;
+      overflow:hidden;
+    }
+    .stem{
+      position:absolute; left:50%; bottom:0;
+      width:8px; height:150px;
+      transform: translateX(-50%) scaleY(var(--grow));
+      transform-origin: bottom;
+      border-radius:999px;
+      background: linear-gradient(180deg, rgba(140,255,190,.9), rgba(40,170,120,.9));
+      filter: drop-shadow(0 12px 20px rgba(0,0,0,.25));
+    }
+    .petal{
+      position:absolute; left:50%; bottom:140px;
+      width:110px; height:110px;
+      transform: translateX(-50%) scale(var(--bloom)) rotate(0deg);
+      transform-origin:center;
+      border-radius: 40% 60% 55% 45% / 45% 40% 60% 55%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.8), rgba(255,120,200,.85) 35%, rgba(120,180,255,.75) 75%);
+      opacity:.95;
+      animation: float 4s ease-in-out infinite;
+    }
+    .center{
+      position:absolute; left:50%; bottom:175px;
+      width:34px; height:34px;
+      transform: translateX(-50%) scale(var(--bloom));
+      border-radius:999px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(255,220,120,.9));
+    }
+    @keyframes float{ 0%,100%{ transform: translateX(-50%) scale(var(--bloom)) translateY(0)} 50%{ transform: translateX(-50%) scale(var(--bloom)) translateY(-6px)}}
+
+    .hint{color:var(--muted); font-size:12px; line-height:1.45}
+    .footer{color:var(--muted); font-size:12px; padding:0 4px}
+    .hidden{display:none}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="card hero">
+        <h1>30 Günlük Sevgi</h1>
+        <div class="sub" id="subtitle">
+          Bir ay boyunca her gün küçük bir şey… romantik, tatlı ve biraz da cool.
+        </div>
+
+        <div class="row" id="gate">
+          <input id="nameInput" placeholder="İsmini yaz (minik bir kontrol 😌)" autocomplete="off" />
+          <button id="enterBtn">Başlat</button>
+          <span class="pill" id="gateMsg">“Sen olmasaydın çalışmazdı.”</span>
+        </div>
+
+        <div class="progress" aria-label="progress">
+          <div class="bar" id="bar"></div>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <span class="pill" id="dayPill">Gün: —</span>
+          <span class="pill" id="datePill">Başlangıç: —</span>
+          <span class="pill" id="leftPill">Kalan: —</span>
+        </div>
+      </div>
+
+      <div class="card side">
+        <div class="flowerBox">
+          <div class="flower" id="flower">
+            <div class="stem" id="stem"></div>
+            <div class="petal" id="petal"></div>
+            <div class="center" id="center"></div>
+          </div>
+          <div class="hint" id="hint">
+            İpucu: Her gün girince çiçek biraz daha açıyor. Bazı günler kısa, bazı günler kalbe dokunur. 🌙
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="card message">
+        <div class="dayTitle">
+          <p class="big" id="msgTitle">Başlamak için ismini yaz.</p>
+          <span class="tag" id="msgTag"></span>
+        </div>
+        <div class="text" id="msgText">Bugünlük mesajı birlikte açalım 🙂</div>
+      </div>
+
+      <div class="card days">
+        <div class="sub" style="margin-bottom:10px">Günler</div>
+        <div class="grid" id="grid"></div>
+        <div class="footer" style="margin-top:12px">
+          Not: Gelecek günler kilitli. Zamanı gelince açılır 😌
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // ✅ Sadece burayı düzenle
+  const START_DATE = "2025-12-29"; // 1. ayınızda linki atacağın tarih (YYYY-MM-DD)
+  const HER_NAME = "BALIM";         // Onun adı / lakabı (büyük-küçük fark etmesin diye kontrol normalize ediliyor)
+
+  // 30 günlük mesajlar (romantik + tatlı + cool karışık)
+  const M = [
+    "Gün 1:\nBugün bu sayfayı açtıysan… sistem çalışıyor demektir.\nÇünkü sen varsın.",
+    "Gün 2:\nKüçük bir not: Gülüşün benim en sevdiğim bildirim sesi.",
+    "Gün 3:\nCool davranmaya çalışıyorum ama olmadı:\nSeni özledim.",
+    "Gün 4:\nBugün sadece şunu bil:\nYanında sakinleşiyorum.",
+    "Gün 5:\nSeninle konuşunca zaman hızlanıyor.\nSensizse… update gelmiyor.",
+    "Gün 6:\nBir şey itiraf edeyim:\nBen senin yanında daha iyi biriyim.",
+    "Gün 7:\nMini görev: Bugün kendine nazik ol.\nBen de uzaktan alkışlıyorum.",
+    "Gün 8:\nSen = güven.\nBu kadar net.",
+    "Gün 9:\nBugünlük romantizm dozunu artırıyorum:\nKokun aklımda kaldı.",
+    "Gün 10:\nTatlı bir gerçek:\nSana yazmak, günün en kolay kararı.",
+    "Gün 11:\nBazen cool cümle kuruyorum ya…\nİçimdeki “seni seviyorum”u saklamak için.",
+    "Gün 12:\nBugün: Sen gül.\nBen sebep bulurum.",
+    "Gün 13:\nSeninle aynı odada olmak bile yeter.\nGeri kalanı dünya düşünsün.",
+    "Gün 14:\nSana sarılmanın bir adı olmalı.\nÇünkü bu, resmen huzur.",
+    "Gün 15:\nYarı yol:\nBu çiçek açıyorsa, emeği sensin.",
+    "Gün 16:\nBugün şunu seviyorum:\nSenin “normal halin” bile özel.",
+    "Gün 17:\nKısa ve net:\nSen benim favorimsin.",
+    "Gün 18:\nBugün seni düşündüm.\nSonra bir daha.\nSonra zaten bırakmadım.",
+    "Gün 19:\nBence seninle hayat daha “soft” bir tema kullanıyor.",
+    "Gün 20:\nBugün cool bir plan:\nBir gün aynı anda susup aynı anda gülmek.",
+    "Gün 21:\nSeni sevmenin en güzel yanı:\nHer gün yeniden seçmek gibi.",
+    "Gün 22:\nBugün sadece bir cümle:\nYanımda olsan tamamım.",
+    "Gün 23:\nSen konuşunca ben dinleniyorum.\nEvet, ters ama gerçek.",
+    "Gün 24:\nTatlı hatırlatma:\nSen çok değerlisin. (Benim için değil, kendin için.)",
+    "Gün 25:\nBugün romantik tarafım kazandı:\nSeni görünce içim ‘ev’ diyor.",
+    "Gün 26:\nSeninle: daha cesurum.\nÇünkü arkamda sen varmış gibi hissediyorum.",
+    "Gün 27:\nCool cümle:\nSeni seviyorum.\n(Romantik çevirisi: çok.)",
+    "Gün 28:\nBugün bir hayal:\nSokakta yürürken elini sıkıca tutmak.",
+    "Gün 29:\nSon düzlüğe geldik.\nBen hâlâ aynı yerdeyim: senin yanında.",
+    "Gün 30:\nFinal:\nBu 30 gün sadece küçük bir fragmandı.\nAsıl hikâye… seninle devam etsin."
+  ];
+
+  const DAYS = 30;
+
+  // --- yardımcılar ---
+  const norm = s => (s||"").toString().trim().toLocaleUpperCase("tr-TR");
+  const byId = id => document.getElementById(id);
+
+  function localMidnightFromYMD(ymd){
+    const [y,m,d] = ymd.split("-").map(Number);
+    return new Date(y, m-1, d, 0,0,0,0); // local midnight
+  }
+  function todayLocalMidnight(){
+    const t = new Date();
+    return new Date(t.getFullYear(), t.getMonth(), t.getDate(), 0,0,0,0);
+  }
+  function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
+
+  // --- state ---
+  let unlocked = false;
+  let selectedDay = 1;
+
+  // --- elements ---
+  const gate = byId("gate");
+  const nameInput = byId("nameInput");
+  const enterBtn = byId("enterBtn");
+  const gateMsg = byId("gateMsg");
+
+  const msgTitle = byId("msgTitle");
+  const msgTag = byId("msgTag");
+  const msgText = byId("msgText");
+
+  const grid = byId("grid");
+
+  const bar = byId("bar");
+  const dayPill = byId("dayPill");
+  const datePill = byId("datePill");
+  const leftPill = byId("leftPill");
+
+  const stem = byId("stem");
+  const petal = byId("petal");
+  const center = byId("center");
+
+  const start = localMidnightFromYMD(START_DATE);
+
+  function computeDay(){
+    const now = todayLocalMidnight();
+    const diffMs = now - start;
+    const diffDays = Math.floor(diffMs / 86400000) + 1; // Day 1 starts at START_DATE
+    return diffDays;
+  }
+
+  function render(){
+    const dayNow = computeDay();
+
+    // start date pill
+    datePill.textContent = "Başlangıç: " + START_DATE;
+
+    if(!unlocked){
+      msgTitle.textContent = "Başlamak için ismini yaz.";
+      msgTag.textContent = "";
+      msgText.textContent = "Bugünlük mesajı birlikte açalım 🙂";
+      dayPill.textContent = "Gün: —";
+      leftPill.textContent = "Kalan: —";
+      bar.style.width = "0%";
+      stem.style.setProperty("--grow", 0.05);
+      petal.style.setProperty("--bloom", 0.05);
+      center.style.setProperty("--bloom", 0.05);
+      grid.innerHTML = "";
+      return;
+    }
+
+    // before start date
+    if(dayNow <= 0){
+      const daysTo = Math.abs(dayNow) + 1;
+      msgTitle.textContent = "Henüz zamanı değil 😌";
+      msgTag.textContent = "Başlamasına: " + daysTo + " gün";
+      msgText.textContent = "Bu sayfa, doğru gün geldiğinde açılacak.\nAma şimdiden şunu söyleyeyim:\nSen olmasaydın çalışmazdı.";
+      dayPill.textContent = "Gün: 0";
+      leftPill.textContent = "Kalan: " + DAYS;
+      bar.style.width = "0%";
+      stem.style.setProperty("--grow", 0.08);
+      petal.style.setProperty("--bloom", 0.08);
+      center.style.setProperty("--bloom", 0.08);
+      grid.innerHTML = "";
+      return;
+    }
+
+    const available = clamp(dayNow, 1, DAYS);
+    selectedDay = clamp(selectedDay, 1, available);
+
+    // progress + pills
+    dayPill.textContent = "Gün: " + available + "/" + DAYS;
+    leftPill.textContent = "Kalan: " + (DAYS - available);
+    bar.style.width = (available / DAYS * 100).toFixed(1) + "%";
+
+    // flower growth
+    const grow = 0.10 + (available / DAYS) * 0.90;
+    const bloom = 0.12 + (available / DAYS) * 0.88;
+    stem.style.setProperty("--grow", grow.toFixed(3));
+    petal.style.setProperty("--bloom", bloom.toFixed(3));
+    center.style.setProperty("--bloom", bloom.toFixed(3));
+
+    // message area
+    msgTitle.textContent = "Gün " + selectedDay;
+    msgTag.textContent = selectedDay === available ? "Bugünün mesajı" : "Önceki gün";
+    msgText.textContent = M[selectedDay-1];
+
+    // grid
+    grid.innerHTML = "";
+    for(let i=1;i<=DAYS;i++){
+      const b = document.createElement("div");
+      b.className = "d" + (i>available ? " locked" : "") + (i===selectedDay ? " active" : "");
+      b.textContent = i;
+      b.onclick = () => {
+        if(i>available) return;
+        selectedDay = i;
+        render();
+      };
+      grid.appendChild(b);
+    }
+  }
+
+  function tryEnter(){
+    const typed = norm(nameInput.value);
+    const target = norm(HER_NAME);
+
+    // “Sen olmasaydın çalışmazdı” hissi:
+    // Eğer adı tutarsa ekstra tatlı bir efekt; tutmazsa yine de açıyoruz (kırmayalım diye).
+    unlocked = true;
+
+    if(typed && typed === target){
+      gateMsg.textContent = "Bileşen bulundu: " + typed + " ✅";
+    } else if(typed){
+      gateMsg.textContent = "Bileşen bulundu: " + typed + " ✅";
+    } else {
+      gateMsg.textContent = "Bileşen bulundu ✅";
+    }
+
+    render();
+  }
+
+  enterBtn.addEventListener("click", tryEnter);
+  nameInput.addEventListener("keydown", (e)=>{ if(e.key==="Enter") tryEnter(); });
+
+  render();
+</script>
+</body>
+</html>
