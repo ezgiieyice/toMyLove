@@ -123,79 +123,101 @@
       opacity:.85;
     }
 
-    /* Çiçek büyümesi */
+    /* 🌻 Bouquet (5 ayçiçeği) */
     .flowerBox{display:flex; flex-direction:column; gap:10px}
-    /* 🌻 AYÇİÇEĞİ */
-    .flower{
+
+    .flower.bouquet{
       height:240px;
       border-radius:18px;
       border:1px solid rgba(255,255,255,.14);
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
       position:relative;
       overflow:hidden;
     }
-    
-    /* Sap */
-    .stem{
+
+    .sun{
+      position:absolute;
+      bottom:0;
+      left:var(--x,50%);
+      transform: translateX(-50%);
+      width:140px;
+      height:240px;
+      --g: .2; /* grow */
+      --b: .2; /* bloom */
+    }
+
+    .sun .head{
+      position:absolute;
+      left:50%;
+      bottom:120px;
+      width:120px;
+      height:120px;
+      transform: translateX(-50%) scale(var(--b)) rotate(var(--tilt, 0deg));
+      transform-origin: 50% 70%;
+      animation: sway var(--spd, 5s) ease-in-out infinite;
+      filter: drop-shadow(0 8px 18px rgba(0,0,0,.25));
+    }
+
+    @keyframes sway{
+      0%,100% { transform: translateX(-50%) scale(var(--b)) rotate(calc(var(--tilt,0deg) - 15.5deg)); }
+      50%     { transform: translateX(-50%) scale(var(--b)) rotate(calc(var(--tilt,0deg) + 25.5deg)); }
+    }
+
+    .sun .petals{
+      position:absolute; inset:0;
+      border-radius:50%;
+      background: repeating-conic-gradient(
+        from 0deg,
+        #fbc02d 0deg 10deg,
+        #ffe082 10deg 20deg
+      );
+    }
+
+    .sun .core{
+      position:absolute;
+      left:50%; top:50%;
+      width:42px; height:42px;
+      transform: translate(-50%,-50%);
+      border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #6d4c41, #3e2723);
+      box-shadow: inset 0 0 0 3px rgba(255,255,255,.05);
+    }
+
+    .sun .stem{
       position:absolute;
       left:50%;
       bottom:0;
       width:10px;
       height:160px;
-      transform: translateX(-50%) scaleY(var(--grow));
+      transform: translateX(-50%) scaleY(var(--g));
       transform-origin: bottom;
       border-radius:999px;
-      background: linear-gradient(180deg, #4caf50, #2e7d32);
-      filter: drop-shadow(0 10px 20px rgba(0,0,0,.25));
+      background: linear-gradient(180deg, #66bb6a, #2e7d32);
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.20));
     }
-    
-    /* Yapraklar (taç) */
-    .petal{
+
+    .sun .leaf{
       position:absolute;
-      left:50%;
-      bottom:140px;
-      width:140px;
-      height:140px;
-      transform: translateX(-50%) scale(var(--bloom));
-      transform-origin:center;
-      border-radius:50%;
-      background:
-        repeating-conic-gradient(
-          from 0deg,
-          #fbc02d 0deg 10deg,
-          #fdd835 10deg 20deg
-        );
-      filter: drop-shadow(0 6px 14px rgba(0,0,0,.25));
-      animation: sunflowerFloat 5s ease-in-out infinite;
+      width:46px; height:26px;
+      background: linear-gradient(180deg, rgba(120,255,170,.9), rgba(40,170,120,.9));
+      border-radius: 60% 40% 55% 45% / 60% 45% 55% 40%;
+      opacity:.95;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,.18));
     }
-    
-    /* Merkez */
-    .center{
-      position:absolute;
-      left:50%;
-      bottom:175px;
-      width:46px;
-      height:46px;
-      transform: translateX(-50%) scale(var(--bloom));
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 30% 30%, #5d4037, #3e2723);
-      box-shadow: inset 0 0 0 3px rgba(255,255,255,.05);
-    }
-    
-    @keyframes sunflowerFloat{
-      0%,100%{
-        transform: translateX(-50%) scale(var(--bloom)) rotate(0deg);
-      }
-      50%{
-        transform: translateX(-50%) scale(var(--bloom)) rotate(2deg);
-      }
-    }
+    .sun .leaf.l1{ left:50%; bottom:45px; transform: translateX(-90%) rotate(-18deg) scale(var(--g)); transform-origin: left center; }
+    .sun .leaf.l2{ left:50%; bottom:70px; transform: translateX(-10%) rotate(22deg)  scale(var(--g)); transform-origin: right center; }
+
+    .sun.s1{ --x: 18%; --tilt:-6deg; --spd: 3.2s; }
+    .sun.s2{ --x: 34%; --tilt: 2deg; --spd: 3.6s; }
+    .sun.s3{ --x: 50%; --tilt:-1deg; --spd: 3.4s; }
+    .sun.s4{ --x: 66%; --tilt: 5deg; --spd: 3.8s; }
+    .sun.s5{ --x: 82%; --tilt:-3deg; --spd: 3.3s; }
+
 
     .hint{color:var(--muted); font-size:12px; line-height:1.45}
     .footer{color:var(--muted); font-size:12px; padding:0 4px}
 
-    /* Modal (foto + not) */
+    /* Modal */
     .modalBack{
       position:fixed; inset:0;
       background: rgba(0,0,0,.55);
@@ -236,18 +258,18 @@
       border:1px solid rgba(255,255,255,.14);
       display:none;
     }
-    /* Dış kenarlara polaroid (sayfanın boş arka planına) */
+
+    /* Polaroid kenarlar */
     .edgePolaroids{
       position: fixed;
       top: 50%;
       transform: translateY(-50%);
       display: grid;
       gap: 14px;
-      z-index: 1;              /* içerikten altta kalsın */
-      pointer-events: none;    /* tıklamaları engellemesin */
+      z-index: 1;
+      pointer-events: none;
       opacity: .95;
     }
-
     .edgePolaroids.left{ left: 18px; }
     .edgePolaroids.right{ right: 18px; }
 
@@ -259,7 +281,6 @@
       box-shadow: 0 18px 60px rgba(0,0,0,.35);
       transform: rotate(var(--rot, -2deg));
     }
-
     .edgePolaroid img{
       width: 100%;
       height: 145px;
@@ -268,75 +289,13 @@
       display: block;
     }
 
-    .edgePolaroid .cap{
-      margin-top: 10px;
-      color: rgba(10,10,10,.75);
-      font-size: 12px;
-      font-weight: 700;
-      line-height: 1.2;
-    }
-
-    /* İçerik üstte kalsın */
+    /* İçerik üstte */
     .wrap{ position: relative; z-index: 5; }
 
-    /* Mobil bantlar: içerikten ayrı üst-alt şerit */
-    .mobileBand{ display:none; }
-    
-    @media (max-width: 900px){
-
-    /* içerik üst/alt bantlara çarpmasın */
-    body{
-      padding-top: 220px;
-      padding-bottom: 220px;
-      align-items: flex-start;
-      justify-content: flex-start;
+    /* Küçük ekranlarda kenar polaroidleri kapat (PC web odaklı) */
+    @media (max-width: 1200px){
+      .edgePolaroids{ display:none; }
     }
-  
-    /* üst bant = sol grup */
-    .edgePolaroids.left{
-      position: fixed;
-      top: 14px;
-      left: 12px;
-      right: 12px;
-      transform: none;
-      display: flex;
-      gap: 10px;
-      justify-content: space-between;
-      z-index: 2;
-    }
-  
-    /* alt bant = sağ grup */
-    .edgePolaroids.right{
-      position: fixed;
-      bottom: 14px;
-      left: 12px;
-      right: 12px;
-      transform: none;
-      display: flex;
-      gap: 10px;
-      justify-content: space-between;
-      z-index: 2;
-    }
-  
-    .edgePolaroid{
-      width: calc((100% - 20px) / 3);
-      padding: 8px 8px 10px;
-    }
-  
-    .edgePolaroid img{
-      height: 105px;
-    }
-    
-    .wrap{ margin-bottom: 10px; 
-    }
-  }
-
-    
-    /* PC'de bantlar görünmesin, polaroidler kenarda kalsın */
-    @media (min-width: 901px){
-      .mobileBand{ display:none; }
-    }
-
   </style>
 </head>
 
@@ -347,21 +306,19 @@
     <div class="edgePolaroid" style="--rot:2deg"><img src="photos/left2.jpeg" alt="anı"></div>
     <div class="edgePolaroid" style="--rot:-1deg"><img src="photos/left3.jpeg" alt="anı"></div>
   </div>
-  
+
   <!-- Sağ grup -->
   <div class="edgePolaroids right">
     <div class="edgePolaroid" style="--rot:3deg"><img src="photos/right1.jpeg" alt="anı"></div>
     <div class="edgePolaroid" style="--rot:-3deg"><img src="photos/right2.jpeg" alt="anı"></div>
     <div class="edgePolaroid" style="--rot:1deg"><img src="photos/right3.jpeg" alt="anı"></div>
   </div>
-  
+
   <div class="wrap">
     <div class="top">
       <div class="card hero">
         <h1>30 Günlük Sevgi</h1>
-        <div class="sub">
-          Bir ay boyunca her gün küçük bir şey… romantik, tatlı ve biraz da cool.
-        </div>
+        <div class="sub">Bir ay boyunca her gün küçük bir şey… romantik, tatlı ve biraz da cool.</div>
 
         <div class="row" id="gate">
           <input id="nameInput" placeholder="İsmini yaz (minik bir kontrol 😌)" autocomplete="off" />
@@ -382,19 +339,18 @@
 
       <div class="card side">
         <div class="flowerBox">
-          <div class="flower">
-            <div class="stem" id="stem"></div>
-            <div class="petal" id="petal"></div>
-            <div class="center" id="center"></div>
+          <div class="flower bouquet" id="bouquet">
+            <div class="sun s1"><div class="stem"></div><div class="head"><div class="petals"></div><div class="core"></div></div><div class="leaf l1"></div><div class="leaf l2"></div></div>
+            <div class="sun s2"><div class="stem"></div><div class="head"><div class="petals"></div><div class="core"></div></div><div class="leaf l1"></div><div class="leaf l2"></div></div>
+            <div class="sun s3"><div class="stem"></div><div class="head"><div class="petals"></div><div class="core"></div></div><div class="leaf l1"></div><div class="leaf l2"></div></div>
+            <div class="sun s4"><div class="stem"></div><div class="head"><div class="petals"></div><div class="core"></div></div><div class="leaf l1"></div><div class="leaf l2"></div></div>
+            <div class="sun s5"><div class="stem"></div><div class="head"><div class="petals"></div><div class="core"></div></div><div class="leaf l1"></div><div class="leaf l2"></div></div>
           </div>
-          <div class="hint">
-            İpucu: Her gün girince çiçek biraz daha açıyor. 🌙
-          </div>
+          <div class="hint">İpucu: Her gün girince çiçek biraz daha açıyor. 🌙</div>
         </div>
       </div>
     </div>
 
-    <!-- GÜNLÜK MESAJLAR + GÜNLER -->
     <div class="main">
       <div class="card message">
         <div class="dayTitle">
@@ -407,13 +363,10 @@
       <div class="card days">
         <div class="sub" style="margin-bottom:10px">Günler</div>
         <div class="grid" id="grid"></div>
-        <div class="footer" style="margin-top:12px">
-          Not: Gelecek günler kilitli. Zamanı gelince açılır 😌
-        </div>
+        <div class="footer" style="margin-top:12px">Not: Gelecek günler kilitli. Zamanı gelince açılır 😌</div>
       </div>
     </div>
 
-    <!-- ANILAR + BİRLİKTE GÜNLER -->
     <div class="main" style="margin-top:16px">
       <div class="card message">
         <div class="dayTitle">
@@ -433,7 +386,6 @@
     </div>
   </div>
 
-  <!-- Modal -->
   <div class="modalBack" id="modalBack" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="modalHead">
@@ -449,11 +401,9 @@
 
 <script>
   // ✅ SADECE BU KISIMLARI DÜZENLE
-
   const HER_NAME = "ONUN_ADI";      // ör: "MELİSA" veya lakap
-  const START_DATE = "2025-11-29";  // 30 günlük mesajların başlayacağı gün (istersen değişir)
+  const START_DATE = "2025-11-29";  // 30 günlük mesajların başlayacağı gün
 
-  // 30 günlük mesajlar
   const M = [
     "Gün 1:\nBugün bu sayfayı açtıysan… sistem çalışıyor demektir.\nÇünkü sen varsın.",
     "Gün 2:\nKüçük bir not: Gülüşün benim en sevdiğim bildirim sesi.",
@@ -487,53 +437,24 @@
     "Gün 30:\nFinal:\nBu 30 gün sadece küçük bir fragmandı.\nAsıl hikâye… seninle devam etsin."
   ];
 
-  // === ANILAR: sabit tarihler ===
   const MEMORY_EVENTS = [
-    { date: "2025-11-12", title: "Tanışma", note: "O gün bir şey başladı." },
-    { date: "2025-11-25", title: "İlk buluşma", note: "İlk kez gerçekten 'biz' gibi." },
-    { date: "2025-11-29", title: "1. ayın başlangıcı", note: "Bu sayfa da buradan başlıyor." },
-    { date: "2025-12-29", title: "1. ay", note: "Bir ay değil… alışkanlık gibi." },
+    { date: "2025-11-12", title: "Tanışma", note: "O malum gün :) (appte kaydırmacalı)" },
+    { date: "2025-11-25", title: "İlk buluşma", note: "S-bahn'dan yanıma gelene kadarki anlar komediydi." },
+    { date: "2025-11-29", title: "👉👈", note: "Fazla söze gerek yok." },
+    { date: "2025-12-29", title: "1. ay", note: "Bir ay değil… Tamamlanmış gibi." },
   ];
 
-  // 💗 sadece bu iki gün (ilk buluşma + sevgili olma)
-  const HEART_DATES = [
-    "2025-11-25",   // ilk buluşma
-    "2025-11-29",   // sevgili olma tarihi -> burayı sen yaz
-  ];
+  const HEART_DATES = ["2025-11-25","2025-11-29"];
 
-  // === BİRLİKTE OLDUĞUNUZ GÜNLER (senin liste) ===
   const TOGETHER_DATES = [
-    "2025-11-25",
-    "2025-11-26",
-    "2025-11-28",
-    "2025-11-29",
-    "2025-11-30",
-    "2025-12-01",
-    "2025-12-02",
-    "2025-12-05",
-    "2025-12-06",
-    "2025-12-07",
-    "2025-12-08",
-    "2025-12-09",
-    "2025-12-10",
-    "2025-12-11",
-    "2025-12-12",
-    "2025-12-13",
-    "2025-12-14",
-    "2025-12-15",
-    "2025-12-16",
-    "2025-12-17",
-    "2025-12-19",
-    "2025-12-20",
-    "2025-12-21",
-    "2025-12-22",
-    "2025-12-23",
-    "2025-12-24",
-    "2025-12-25",
-    // "2025-12-29",  // 1 ay gününde de berabersen aç ve ekle
+    "2025-11-25","2025-11-26","2025-11-28","2025-11-29","2025-11-30",
+    "2025-12-01","2025-12-02","2025-12-05","2025-12-06","2025-12-07",
+    "2025-12-08","2025-12-09","2025-12-10","2025-12-11","2025-12-12",
+    "2025-12-13","2025-12-14","2025-12-15","2025-12-16","2025-12-17",
+    "2025-12-19","2025-12-20","2025-12-21","2025-12-22","2025-12-23",
+    "2025-12-24","2025-12-25",
   ];
 
-  // === O güne özel notlar (hover + modal) ===
   const TOGETHER_NOTES = {
     "2025-11-25": "İlk buluşma <3 Karlsruhe",
     "2025-11-26": "O gece yanında kaldım (Heilbronn) — sabah döndüm",
@@ -564,10 +485,6 @@
     "2025-12-25": "Sen işe, ben Karlsruhe’ye döndüm",
   };
 
-  // === FOTO EKLEME (Özel günler) ===
-  // 1) Repo içine photos/ klasörü aç
-  // 2) Foto yükle (ör: photos/2025-12-16-flower.jpg)
-  // 3) Buraya eşle
   const PHOTO_BY_DATE = {
     // "2025-11-25": "photos/2025-11-25-firstdate.jpg",
     // "2025-11-29": "photos/2025-11-29-market.jpg",
@@ -575,14 +492,12 @@
     // "2025-12-20": "photos/2025-12-20-cinema.jpg",
   };
 
-  // Takvim aralığı (senin istediğin)
   const TOGETHER_RANGE_START = "2025-11-25";
   const TOGETHER_RANGE_END   = "2025-12-29";
 
   // =======================
   // AŞAĞISI OTOMATİK
   // =======================
-
   const DAYS = 30;
   const norm = s => (s||"").toString().trim().toLocaleUpperCase("tr-TR");
   const byId = id => document.getElementById(id);
@@ -601,7 +516,7 @@
     const start = localMidnightFromYMD(startYMD);
     const now = todayLocalMidnight();
     const diffMs = now - start;
-    return Math.floor(diffMs / 86400000) + 1; // Day 1 = START_DATE
+    return Math.floor(diffMs / 86400000) + 1;
   }
 
   function fmtTR(ymd){
@@ -638,9 +553,7 @@
   const datePill = byId("datePill");
   const leftPill = byId("leftPill");
 
-  const stem = byId("stem");
-  const petal = byId("petal");
-  const center = byId("center");
+  const bouquet = byId("bouquet");
 
   // modal
   const modalBack = byId("modalBack");
@@ -652,12 +565,20 @@
   let unlocked = false;
   let selectedDay = 1;
 
+  function setBouquet(grow, bloom){
+    if(!bouquet) return;
+    bouquet.querySelectorAll(".sun").forEach((el, idx) => {
+      const w = [0.92, 0.98, 1.06, 0.98, 0.92][idx] ?? 1;
+      el.style.setProperty("--g", (grow * w).toFixed(3));
+      el.style.setProperty("--b", (bloom * w).toFixed(3));
+    });
+  }
+
   function openModal(ymd){
     const title = `${fmtTR(ymd)}${HEART_DATES.includes(ymd) ? " 💗" : (TOGETHER_DATES.includes(ymd) ? " 👭" : "")}`;
     modalTitle.textContent = title;
 
-    const note = TOGETHER_NOTES[ymd] ? TOGETHER_NOTES[ymd] : "Bu gün için küçük bir not ekleyebilirsin 🙂";
-    modalNote.textContent = note;
+    modalNote.textContent = TOGETHER_NOTES[ymd] ? TOGETHER_NOTES[ymd] : "Bu gün için küçük bir not ekleyebilirsin 🙂";
 
     const imgPath = PHOTO_BY_DATE[ymd];
     if(imgPath){
@@ -676,7 +597,6 @@
     modalBack.style.display = "none";
     modalBack.setAttribute("aria-hidden","true");
   }
-
   closeBtn.addEventListener("click", closeModal);
   modalBack.addEventListener("click", (e)=>{ if(e.target === modalBack) closeModal(); });
   document.addEventListener("keydown", (e)=>{ if(e.key === "Escape") closeModal(); });
@@ -684,7 +604,6 @@
   function renderMemories(){
     const el = byId("timelineText");
     if(!el) return;
-
     el.textContent = MEMORY_EVENTS
       .sort((a,b)=> a.date.localeCompare(b.date))
       .map(ev => `• ${fmtTR(ev.date)} — ${ev.title}\n  ${ev.note}`)
@@ -701,31 +620,22 @@
     grid.innerHTML = "";
     for(const ymd of all){
       const b = document.createElement("div");
-      const isTogether = set.has(ymd);                 // birlikte olunan günler
-      const isHeart = HEART_DATES.includes(ymd);       // sadece 2 özel gün
+      const isTogether = set.has(ymd);
+      const isHeart = HEART_DATES.includes(ymd);
       const hasPhoto = Boolean(PHOTO_BY_DATE[ymd]);
 
       b.className = "d" + ((isTogether || isHeart) ? " active" : "") + (hasPhoto ? " hasPhoto" : "");
-
       const dayNum = ymd.slice(8,10);
 
-      // Öncelik: 💗 (özel) > 👭 (birlikte) > sade sayı
-      if (isHeart) {
-        b.textContent = `💗 ${dayNum}`;
-      } else if (isTogether) {
-        b.textContent = `👭 ${dayNum}`;
-      } else {
-        b.textContent = dayNum;
-      }
+      if (isHeart) b.textContent = `💗 ${dayNum}`;
+      else if (isTogether) b.textContent = `👭 ${dayNum}`;
+      else b.textContent = dayNum;
 
-      // hover
       const note = TOGETHER_NOTES[ymd] ? ` — ${TOGETHER_NOTES[ymd]}` : "";
       const badge = isHeart ? " 💗" : (isTogether ? " 👭" : "");
       b.title = `${fmtTR(ymd)}${badge}${note}${hasPhoto ? " (foto var)" : ""}`;
 
-      // click -> modal
       b.onclick = () => openModal(ymd);
-
       grid.appendChild(b);
     }
   }
@@ -740,9 +650,7 @@
       dayPill.textContent = "Gün: —";
       leftPill.textContent = "Kalan: —";
       bar.style.width = "0%";
-      stem.style.setProperty("--grow", 0.05);
-      petal.style.setProperty("--bloom", 0.05);
-      center.style.setProperty("--bloom", 0.05);
+      setBouquet(0.12, 0.12);
       grid.innerHTML = "";
       return;
     }
@@ -760,9 +668,7 @@
       dayPill.textContent = "Gün: 0";
       leftPill.textContent = "Kalan: " + DAYS;
       bar.style.width = "0%";
-      stem.style.setProperty("--grow", 0.08);
-      petal.style.setProperty("--bloom", 0.08);
-      center.style.setProperty("--bloom", 0.08);
+      setBouquet(0.14, 0.14);
       grid.innerHTML = "";
       return;
     }
@@ -776,9 +682,7 @@
 
     const grow = 0.10 + (available / DAYS) * 0.90;
     const bloom = 0.12 + (available / DAYS) * 0.88;
-    stem.style.setProperty("--grow", grow.toFixed(3));
-    petal.style.setProperty("--bloom", bloom.toFixed(3));
-    center.style.setProperty("--bloom", bloom.toFixed(3));
+    setBouquet(grow, bloom);
 
     msgTitle.textContent = "Gün " + selectedDay;
     msgTag.textContent = selectedDay === available ? "Bugünün mesajı" : "Önceki gün";
@@ -800,17 +704,8 @@
 
   function tryEnter(){
     const typed = norm(nameInput.value);
-    const target = norm(HER_NAME);
-
     unlocked = true;
-    if(typed && typed === target){
-      gateMsg.textContent = "Bileşen bulundu: " + typed + " ✅";
-    } else if(typed){
-      gateMsg.textContent = "Bileşen bulundu: " + typed + " ✅";
-    } else {
-      gateMsg.textContent = "Bileşen bulundu ✅";
-    }
-
+    gateMsg.textContent = typed ? ("Bileşen bulundu: " + typed + " ✅") : "Bileşen bulundu ✅";
     renderMemories();
     renderTogetherCalendar();
     render();
@@ -819,7 +714,6 @@
   enterBtn.addEventListener("click", tryEnter);
   nameInput.addEventListener("keydown", (e)=>{ if(e.key==="Enter") tryEnter(); });
 
-  // ilk yükleme
   renderMemories();
   renderTogetherCalendar();
   render();
