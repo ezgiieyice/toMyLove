@@ -125,45 +125,71 @@
 
     /* Çiçek büyümesi */
     .flowerBox{display:flex; flex-direction:column; gap:10px}
+    /* 🌻 AYÇİÇEĞİ */
     .flower{
-      height:220px;
+      height:240px;
       border-radius:18px;
       border:1px solid rgba(255,255,255,.14);
-      background: radial-gradient(160px 120px at 30% 30%, rgba(255,120,200,.25), transparent 60%),
-                  radial-gradient(160px 120px at 70% 35%, rgba(120,180,255,.25), transparent 60%),
-                  rgba(255,255,255,.05);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
       position:relative;
       overflow:hidden;
     }
+    
+    /* Sap */
     .stem{
-      position:absolute; left:50%; bottom:0;
-      width:8px; height:150px;
+      position:absolute;
+      left:50%;
+      bottom:0;
+      width:10px;
+      height:160px;
       transform: translateX(-50%) scaleY(var(--grow));
       transform-origin: bottom;
       border-radius:999px;
-      background: linear-gradient(180deg, rgba(140,255,190,.9), rgba(40,170,120,.9));
-      filter: drop-shadow(0 12px 20px rgba(0,0,0,.25));
+      background: linear-gradient(180deg, #4caf50, #2e7d32);
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,.25));
     }
+    
+    /* Yapraklar (taç) */
     .petal{
-      position:absolute; left:50%; bottom:140px;
-      width:110px; height:110px;
-      transform: translateX(-50%) scale(var(--bloom)) rotate(0deg);
-      transform-origin:center;
-      border-radius: 40% 60% 55% 45% / 45% 40% 60% 55%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.8), rgba(255,120,200,.85) 35%, rgba(120,180,255,.75) 75%);
-      opacity:.95;
-      animation: float 4s ease-in-out infinite;
-    }
-    .center{
-      position:absolute; left:50%; bottom:175px;
-      width:34px; height:34px;
+      position:absolute;
+      left:50%;
+      bottom:140px;
+      width:140px;
+      height:140px;
       transform: translateX(-50%) scale(var(--bloom));
-      border-radius:999px;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(255,220,120,.9));
+      transform-origin:center;
+      border-radius:50%;
+      background:
+        repeating-conic-gradient(
+          from 0deg,
+          #fbc02d 0deg 10deg,
+          #fdd835 10deg 20deg
+        );
+      filter: drop-shadow(0 6px 14px rgba(0,0,0,.25));
+      animation: sunflowerFloat 5s ease-in-out infinite;
     }
-    @keyframes float{
-      0%,100%{ transform: translateX(-50%) scale(var(--bloom)) translateY(0)}
-      50%{ transform: translateX(-50%) scale(var(--bloom)) translateY(-6px)}
+    
+    /* Merkez */
+    .center{
+      position:absolute;
+      left:50%;
+      bottom:175px;
+      width:46px;
+      height:46px;
+      transform: translateX(-50%) scale(var(--bloom));
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 30% 30%, #5d4037, #3e2723);
+      box-shadow: inset 0 0 0 3px rgba(255,255,255,.05);
+    }
+    
+    @keyframes sunflowerFloat{
+      0%,100%{
+        transform: translateX(-50%) scale(var(--bloom)) rotate(0deg);
+      }
+      50%{
+        transform: translateX(-50%) scale(var(--bloom)) rotate(2deg);
+      }
     }
 
     .hint{color:var(--muted); font-size:12px; line-height:1.45}
