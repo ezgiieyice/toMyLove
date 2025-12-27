@@ -253,42 +253,55 @@
     /* İçerik üstte kalsın */
     .wrap{ position: relative; z-index: 5; }
 
-    /* Laptop ekranlarında taşmasın diye kapat */
-    @media (max-width: 1200px){
-      .edgePolaroids{ display:none; }
+    /* Mobilde kenardan içeri taşınsın (üstte grid gibi dursun) */
+    @media (max-width: 900px){
+      body{ padding: 16px; } /* mobilde biraz daha sıkı */
+      .edgePolaroids{
+        position: static;           /* artık içerikte */
+        top: auto;
+        transform: none;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin: 10px 0 16px;
+        opacity: 1;
+        pointer-events: none;
+      }
+      .edgePolaroids.left, .edgePolaroids.right{ left:auto; right:auto; }
+      .edgePolaroid{ width: auto; }
+      .edgePolaroid img{ height: 95px; }
+      .edgePolaroid .cap{ font-size: 11px; }
     }
-
   </style>
 </head>
 
 <body>
-<!-- Sol kenar (3 polaroid) -->
-  <div class="edgePolaroids left">
-    <div class="edgePolaroid" style="--rot:-4deg">
-      <img src="photos/left1.jpeg" alt="anı">
-    </div>
-    <div class="edgePolaroid" style="--rot:2deg">
-      <img src="photos/left2.jpeg" alt="anı">
-    </div>
-    <div class="edgePolaroid" style="--rot:-1deg">
-      <img src="photos/left3.jpeg" alt="anı">
-    </div>
-  </div>
-
-  <!-- Sağ kenar (3 polaroid) -->
-  <div class="edgePolaroids right">
-    <div class="edgePolaroid" style="--rot:3deg">
-      <img src="photos/right1.jpeg" alt="anı">
-    </div>
-    <div class="edgePolaroid" style="--rot:-3deg">
-      <img src="photos/right2.jpeg" alt="anı">
-    </div>
-    <div class="edgePolaroid" style="--rot:1deg">
-      <img src="photos/right3.jpeg" alt="anı">
-    </div>
-  </div>
-
   <div class="wrap">
+    <!-- Sol kenar (3 polaroid) -->
+    <div class="edgePolaroids left">
+      <div class="edgePolaroid" style="--rot:-4deg">
+        <img src="photos/left1.jpeg" alt="anı">
+      </div>
+      <div class="edgePolaroid" style="--rot:2deg">
+        <img src="photos/left2.jpeg" alt="anı">
+      </div>
+      <div class="edgePolaroid" style="--rot:-1deg">
+        <img src="photos/left3.jpeg" alt="anı">
+      </div>
+    </div>
+  
+    <!-- Sağ kenar (3 polaroid) -->
+    <div class="edgePolaroids right">
+      <div class="edgePolaroid" style="--rot:3deg">
+        <img src="photos/right1.jpeg" alt="anı">
+      </div>
+      <div class="edgePolaroid" style="--rot:-3deg">
+        <img src="photos/right2.jpeg" alt="anı">
+      </div>
+      <div class="edgePolaroid" style="--rot:1deg">
+        <img src="photos/right3.jpeg" alt="anı">
+      </div>
+    </div>
+    
     <div class="top">
       <div class="card hero">
         <h1>30 Günlük Sevgi</h1>
@@ -586,7 +599,7 @@
   let selectedDay = 1;
 
   function openModal(ymd){
-    const title = `${fmtTR(ymd)}${TOGETHER_DATES.includes(ymd) ? " 💗" : ""}`;
+    const title = `${fmtTR(ymd)}${HEART_DATES.includes(ymd) ? " 💗" : (TOGETHER_DATES.includes(ymd) ? " 👭" : "")}`;
     modalTitle.textContent = title;
 
     const note = TOGETHER_NOTES[ymd] ? TOGETHER_NOTES[ymd] : "Bu gün için küçük bir not ekleyebilirsin 🙂";
