@@ -253,55 +253,89 @@
     /* İçerik üstte kalsın */
     .wrap{ position: relative; z-index: 5; }
 
-    /* Mobilde kenardan içeri taşınsın (üstte grid gibi dursun) */
+    /* Mobilde: polaroidler üst ve alt padding bandında yatay dursun */
     @media (max-width: 900px){
-      body{ padding: 16px; } /* mobilde biraz daha sıkı */
-      .edgePolaroids{
-        position: static;           /* artık içerikte */
-        top: auto;
-        transform: none;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 10px;
-        margin: 10px 0 16px;
-        opacity: 1;
-        pointer-events: none;
+    
+      /* İçerik ortada kalsın diye üst-alt boşluk açıyoruz */
+      body{
+        padding-top: 220px;     /* üst polaroid bandı */
+        padding-bottom: 220px;  /* alt polaroid bandı */
+        align-items: flex-start; /* ortalamayı bozmasın */
       }
-      .edgePolaroids.left, .edgePolaroids.right{ left:auto; right:auto; }
-      .edgePolaroid{ width: auto; }
-      .edgePolaroid img{ height: 95px; }
-      .edgePolaroid .cap{ font-size: 11px; }
+    
+      /* Sol grup = ÜST bant */
+      .edgePolaroids.left{
+        position: fixed;
+        top: 16px;
+        left: 12px;
+        right: 12px;
+        transform: none;
+        width: auto;
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+        z-index: 1;
+      }
+    
+      /* Sağ grup = ALT bant */
+      .edgePolaroids.right{
+        position: fixed;
+        bottom: 16px;
+        left: 12px;
+        right: 12px;
+        transform: none;
+        width: auto;
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+        z-index: 1;
+      }
+    
+      /* Mobilde polaroid kartları yatay sığsın */
+      .edgePolaroid{
+        width: calc((100% - 20px) / 3); /* 3 kart yan yana */
+        padding: 8px 8px 10px;
+      }
+    
+      .edgePolaroid img{
+        height: 110px;
+      }
+    
+      /* Caption kullanmıyorsun şu an; istersen açabilirsin */
+      .edgePolaroid .cap{
+        font-size: 11px;
+      }
     }
   </style>
 </head>
 
 <body>
+  <!-- Sol kenar (3 polaroid) -->
+  <div class="edgePolaroids left">
+    <div class="edgePolaroid" style="--rot:-4deg">
+      <img src="photos/left1.jpeg" alt="anı">
+    </div>
+    <div class="edgePolaroid" style="--rot:2deg">
+      <img src="photos/left2.jpeg" alt="anı">
+    </div>
+    <div class="edgePolaroid" style="--rot:-1deg">
+      <img src="photos/left3.jpeg" alt="anı">
+    </div>
+  </div>
+
+  <!-- Sağ kenar (3 polaroid) -->
+  <div class="edgePolaroids right">
+    <div class="edgePolaroid" style="--rot:3deg">
+      <img src="photos/right1.jpeg" alt="anı">
+    </div>
+    <div class="edgePolaroid" style="--rot:-3deg">
+      <img src="photos/right2.jpeg" alt="anı">
+    </div>
+    <div class="edgePolaroid" style="--rot:1deg">
+      <img src="photos/right3.jpeg" alt="anı">
+    </div>
+  </div>
   <div class="wrap">
-    <!-- Sol kenar (3 polaroid) -->
-    <div class="edgePolaroids left">
-      <div class="edgePolaroid" style="--rot:-4deg">
-        <img src="photos/left1.jpeg" alt="anı">
-      </div>
-      <div class="edgePolaroid" style="--rot:2deg">
-        <img src="photos/left2.jpeg" alt="anı">
-      </div>
-      <div class="edgePolaroid" style="--rot:-1deg">
-        <img src="photos/left3.jpeg" alt="anı">
-      </div>
-    </div>
-  
-    <!-- Sağ kenar (3 polaroid) -->
-    <div class="edgePolaroids right">
-      <div class="edgePolaroid" style="--rot:3deg">
-        <img src="photos/right1.jpeg" alt="anı">
-      </div>
-      <div class="edgePolaroid" style="--rot:-3deg">
-        <img src="photos/right2.jpeg" alt="anı">
-      </div>
-      <div class="edgePolaroid" style="--rot:1deg">
-        <img src="photos/right3.jpeg" alt="anı">
-      </div>
-    </div>
-    
     <div class="top">
       <div class="card hero">
         <h1>30 Günlük Sevgi</h1>
