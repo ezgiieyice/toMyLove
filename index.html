@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>30 Günlük Sevgi</title>
+  <title>30 Günlük Sevgi + Anılar</title>
   <style>
     :root{
       --bg1:#0b1020; --bg2:#111a33;
@@ -26,9 +26,7 @@
       padding:24px;
     }
     .wrap{width:min(980px, 100%); display:grid; gap:16px}
-    .top{
-      display:flex; gap:14px; align-items:stretch; flex-wrap:wrap;
-    }
+    .top{display:flex; gap:14px; align-items:stretch; flex-wrap:wrap;}
     .card{
       background:var(--card);
       border:1px solid var(--stroke);
@@ -99,6 +97,7 @@
       gap:10px;
     }
     @media (max-width: 560px){ .grid{grid-template-columns: repeat(4, minmax(0,1fr));} }
+
     .d{
       padding:10px 10px;
       border-radius:14px;
@@ -109,14 +108,22 @@
       cursor:pointer;
       user-select:none;
       min-height:40px;
+      position:relative;
     }
     .d.locked{opacity:.45; cursor:not-allowed}
     .d.active{
       border-color: rgba(255,255,255,.35);
       background: rgba(255,255,255,.12);
     }
+    .d.hasPhoto::after{
+      content:"📷";
+      position:absolute;
+      right:8px; top:8px;
+      font-size:12px;
+      opacity:.85;
+    }
 
-    /* “Çiçek büyümesi” */
+    /* Çiçek büyümesi */
     .flowerBox{display:flex; flex-direction:column; gap:10px}
     .flower{
       height:220px;
@@ -154,19 +161,144 @@
       border-radius:999px;
       background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(255,220,120,.9));
     }
-    @keyframes float{ 0%,100%{ transform: translateX(-50%) scale(var(--bloom)) translateY(0)} 50%{ transform: translateX(-50%) scale(var(--bloom)) translateY(-6px)}}
+    @keyframes float{
+      0%,100%{ transform: translateX(-50%) scale(var(--bloom)) translateY(0)}
+      50%{ transform: translateX(-50%) scale(var(--bloom)) translateY(-6px)}
+    }
 
     .hint{color:var(--muted); font-size:12px; line-height:1.45}
     .footer{color:var(--muted); font-size:12px; padding:0 4px}
-    .hidden{display:none}
+
+    /* Modal (foto + not) */
+    .modalBack{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      align-items:center; justify-content:center;
+      padding:18px;
+      z-index: 9999;
+    }
+    .modal{
+      width:min(820px, 100%);
+      background: rgba(20,28,55,.92);
+      border:1px solid rgba(255,255,255,.16);
+      border-radius: 18px;
+      box-shadow: 0 24px 80px rgba(0,0,0,.45);
+      overflow:hidden;
+    }
+    .modalHead{
+      display:flex; justify-content:space-between; align-items:center;
+      padding:12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+    .modalTitle{font-size:14px; color: var(--text)}
+    .closeBtn{
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+      border-radius: 12px;
+      padding:8px 10px;
+      cursor:pointer;
+    }
+    .modalBody{padding:14px; display:grid; gap:12px}
+    .modalNote{color: rgba(255,255,255,.85); line-height:1.55; white-space:pre-wrap}
+    .modalImg{
+      width:100%;
+      max-height: 420px;
+      object-fit: cover;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      display:none;
+    }
+    /* Dış kenarlara polaroid (sayfanın boş arka planına) */
+    .edgePolaroids{
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      display: grid;
+      gap: 14px;
+      z-index: 1;              /* içerikten altta kalsın */
+      pointer-events: none;    /* tıklamaları engellemesin */
+      opacity: .95;
+    }
+
+    .edgePolaroids.left{ left: 18px; }
+    .edgePolaroids.right{ right: 18px; }
+
+    .edgePolaroid{
+      width: 170px;
+      background: rgba(255,255,255,.92);
+      border-radius: 14px;
+      padding: 10px 10px 14px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.35);
+      transform: rotate(var(--rot, -2deg));
+    }
+
+    .edgePolaroid img{
+      width: 100%;
+      height: 145px;
+      object-fit: cover;
+      border-radius: 10px;
+      display: block;
+    }
+
+    .edgePolaroid .cap{
+      margin-top: 10px;
+      color: rgba(10,10,10,.75);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    /* İçerik üstte kalsın */
+    .wrap{ position: relative; z-index: 5; }
+
+    /* Laptop ekranlarında taşmasın diye kapat */
+    @media (max-width: 1200px){
+      .edgePolaroids{ display:none; }
+    }
+
   </style>
 </head>
+
 <body>
+<!-- Sol kenar (3 polaroid) -->
+  <div class="edgePolaroids left">
+    <div class="edgePolaroid" style="--rot:-4deg">
+      <img src="photos/left1.jpg" alt="anı">
+      <div class="cap">İlk buluşma</div>
+    </div>
+    <div class="edgePolaroid" style="--rot:2deg">
+      <img src="photos/left2.jpg" alt="anı">
+      <div class="cap">Weihnachtsmarkt</div>
+    </div>
+    <div class="edgePolaroid" style="--rot:-1deg">
+      <img src="photos/left3.jpg" alt="anı">
+      <div class="cap">Kütüphane date</div>
+    </div>
+  </div>
+
+  <!-- Sağ kenar (3 polaroid) -->
+  <div class="edgePolaroids right">
+    <div class="edgePolaroid" style="--rot:3deg">
+      <img src="photos/right1.jpg" alt="anı">
+      <div class="cap">Çiçek günü 🌸</div>
+    </div>
+    <div class="edgePolaroid" style="--rot:-3deg">
+      <img src="photos/right2.jpg" alt="anı">
+      <div class="cap">İlk sinema 🎬</div>
+    </div>
+    <div class="edgePolaroid" style="--rot:1deg">
+      <img src="photos/right3.jpg" alt="anı">
+      <div class="cap">Noel zamanı 🎄</div>
+    </div>
+  </div>
+
   <div class="wrap">
     <div class="top">
       <div class="card hero">
         <h1>30 Günlük Sevgi</h1>
-        <div class="sub" id="subtitle">
+        <div class="sub">
           Bir ay boyunca her gün küçük bir şey… romantik, tatlı ve biraz da cool.
         </div>
 
@@ -179,6 +311,7 @@
         <div class="progress" aria-label="progress">
           <div class="bar" id="bar"></div>
         </div>
+
         <div class="row" style="margin-top:10px">
           <span class="pill" id="dayPill">Gün: —</span>
           <span class="pill" id="datePill">Başlangıç: —</span>
@@ -188,18 +321,19 @@
 
       <div class="card side">
         <div class="flowerBox">
-          <div class="flower" id="flower">
+          <div class="flower">
             <div class="stem" id="stem"></div>
             <div class="petal" id="petal"></div>
             <div class="center" id="center"></div>
           </div>
-          <div class="hint" id="hint">
-            İpucu: Her gün girince çiçek biraz daha açıyor. Bazı günler kısa, bazı günler kalbe dokunur. 🌙
+          <div class="hint">
+            İpucu: Her gün girince çiçek biraz daha açıyor. 🌙
           </div>
         </div>
       </div>
     </div>
 
+    <!-- GÜNLÜK MESAJLAR + GÜNLER -->
     <div class="main">
       <div class="card message">
         <div class="dayTitle">
@@ -217,14 +351,48 @@
         </div>
       </div>
     </div>
+
+    <!-- ANILAR + BİRLİKTE GÜNLER -->
+    <div class="main" style="margin-top:16px">
+      <div class="card message">
+        <div class="dayTitle">
+          <p class="big">Anılar</p>
+          <span class="tag">12 Kasım → 29 Aralık</span>
+        </div>
+        <div class="text" id="timelineText"></div>
+      </div>
+
+      <div class="card days">
+        <div class="sub" style="margin-bottom:10px">Birlikte olduğumuz günler (25 Kasım – 29 Aralık)</div>
+        <div class="grid" id="togetherGrid"></div>
+        <div class="footer" style="margin-top:12px">
+          💗 = özel gün (ilk buluşma + sevgili olma). 👭 = diğer birlikte olduğunuz günler. 📷 = foto var. Tıkla: not + foto açılır.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modalBack" id="modalBack" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modalHead">
+        <div class="modalTitle" id="modalTitle">—</div>
+        <button class="closeBtn" id="closeBtn">Kapat</button>
+      </div>
+      <div class="modalBody">
+        <img class="modalImg" id="modalImg" alt="Anı fotoğrafı" />
+        <div class="modalNote" id="modalNote"></div>
+      </div>
+    </div>
   </div>
 
 <script>
-  // ✅ Sadece burayı düzenle
-  const START_DATE = "2025-12-29"; // 1. ayınızda linki atacağın tarih (YYYY-MM-DD)
-  const HER_NAME = "BALIM";         // Onun adı / lakabı (büyük-küçük fark etmesin diye kontrol normalize ediliyor)
+  // ✅ SADECE BU KISIMLARI DÜZENLE
 
-  // 30 günlük mesajlar (romantik + tatlı + cool karışık)
+  const HER_NAME = "ONUN_ADI";      // ör: "MELİSA" veya lakap
+  const START_DATE = "2025-11-29";  // 30 günlük mesajların başlayacağı gün (istersen değişir)
+
+  // 30 günlük mesajlar
   const M = [
     "Gün 1:\nBugün bu sayfayı açtıysan… sistem çalışıyor demektir.\nÇünkü sen varsın.",
     "Gün 2:\nKüçük bir not: Gülüşün benim en sevdiğim bildirim sesi.",
@@ -258,15 +426,109 @@
     "Gün 30:\nFinal:\nBu 30 gün sadece küçük bir fragmandı.\nAsıl hikâye… seninle devam etsin."
   ];
 
-  const DAYS = 30;
+  // === ANILAR: sabit tarihler ===
+  const MEMORY_EVENTS = [
+    { date: "2025-11-12", title: "Tanışma", note: "O gün bir şey başladı." },
+    { date: "2025-11-25", title: "İlk buluşma", note: "İlk kez gerçekten 'biz' gibi." },
+    { date: "2025-11-29", title: "1. ayın başlangıcı", note: "Bu sayfa da buradan başlıyor." },
+    { date: "2025-12-29", title: "1. ay", note: "Bir ay değil… alışkanlık gibi." },
+  ];
 
-  // --- yardımcılar ---
+  // 💗 sadece bu iki gün (ilk buluşma + sevgili olma)
+  const HEART_DATES = [
+    "2025-11-25",   // ilk buluşma
+    "2025-11-29",   // sevgili olma tarihi -> burayı sen yaz
+  ];
+
+  // === BİRLİKTE OLDUĞUNUZ GÜNLER (senin liste) ===
+  const TOGETHER_DATES = [
+    "2025-11-25",
+    "2025-11-26",
+    "2025-11-28",
+    "2025-11-29",
+    "2025-11-30",
+    "2025-12-01",
+    "2025-12-02",
+    "2025-12-05",
+    "2025-12-06",
+    "2025-12-07",
+    "2025-12-08",
+    "2025-12-09",
+    "2025-12-10",
+    "2025-12-11",
+    "2025-12-12",
+    "2025-12-13",
+    "2025-12-14",
+    "2025-12-15",
+    "2025-12-16",
+    "2025-12-17",
+    "2025-12-19",
+    "2025-12-20",
+    "2025-12-21",
+    "2025-12-22",
+    "2025-12-23",
+    "2025-12-24",
+    "2025-12-25",
+    // "2025-12-29",  // 1 ay gününde de berabersen aç ve ekle
+  ];
+
+  // === O güne özel notlar (hover + modal) ===
+  const TOGETHER_NOTES = {
+    "2025-11-25": "İlk buluşma <3 Karlsruhe",
+    "2025-11-26": "O gece yanında kaldım (Heilbronn) — sabah döndüm",
+    "2025-11-28": "Cuma ders çıkışı Heilbronn’a geldim",
+    "2025-11-29": "Heilbronn Weihnachtsmarkt 🎄",
+    "2025-11-30": "Heilbronn",
+    "2025-12-01": "Sabah ben Karlsruhe’ye döndüm, sen işe (Heilbronn)",
+    "2025-12-02": "İş çıkışı Weihnachtsmarkt — sonra Karlsruhe’ye geldin",
+    "2025-12-05": "Tavuklu makarna + film gecesi 🍝🎬",
+    "2025-12-06": "Heilbronn: kütüphane date (Milira ile tanıştım) 📚",
+    "2025-12-07": "Heilbronn — evdeydik",
+    "2025-12-08": "Sen işe, ben erken Karlsruhe’ye döndüm (yurtta stock görevi)",
+    "2025-12-09": "Ben Heilbronn’a geldim",
+    "2025-12-10": "Sen evden remote çalıştın",
+    "2025-12-11": "Arkadaşlarınla tanışma: Melisa, Hodeige ✨",
+    "2025-12-12": "Dönüş",
+    "2025-12-13": "Bowling akşamı 🎳 — Karlsruhe’ye birlikte dönüş",
+    "2025-12-14": "Birlikteydik",
+    "2025-12-15": "Sen Karlsruhe’den işe gittin",
+    "2025-12-16": "Heilbronn — bana çiçek aldın 🌸",
+    "2025-12-17": "Ben eve döndüm",
+    "2025-12-19": "Sen Karlsruhe’ye geldin",
+    "2025-12-20": "İlk sinema gecemiz 🎬",
+    "2025-12-21": "Akşam Heilbronn’a birlikte geldik",
+    "2025-12-22": "Heilbronn",
+    "2025-12-23": "Heilbronn",
+    "2025-12-24": "Heilbronn — Noel zamanı birlikte 🎄",
+    "2025-12-25": "Sen işe, ben Karlsruhe’ye döndüm",
+  };
+
+  // === FOTO EKLEME (Özel günler) ===
+  // 1) Repo içine photos/ klasörü aç
+  // 2) Foto yükle (ör: photos/2025-12-16-flower.jpg)
+  // 3) Buraya eşle
+  const PHOTO_BY_DATE = {
+    // "2025-11-25": "photos/2025-11-25-firstdate.jpg",
+    // "2025-11-29": "photos/2025-11-29-market.jpg",
+    // "2025-12-16": "photos/2025-12-16-flower.jpg",
+    // "2025-12-20": "photos/2025-12-20-cinema.jpg",
+  };
+
+  // Takvim aralığı (senin istediğin)
+  const TOGETHER_RANGE_START = "2025-11-25";
+  const TOGETHER_RANGE_END   = "2025-12-29";
+
+  // =======================
+  // AŞAĞISI OTOMATİK
+  // =======================
+
+  const DAYS = 30;
   const norm = s => (s||"").toString().trim().toLocaleUpperCase("tr-TR");
   const byId = id => document.getElementById(id);
 
   function localMidnightFromYMD(ymd){
     const [y,m,d] = ymd.split("-").map(Number);
-    return new Date(y, m-1, d, 0,0,0,0); // local midnight
+    return new Date(y, m-1, d, 0,0,0,0);
   }
   function todayLocalMidnight(){
     const t = new Date();
@@ -274,12 +536,33 @@
   }
   function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
 
-  // --- state ---
-  let unlocked = false;
-  let selectedDay = 1;
+  function computeDay(startYMD){
+    const start = localMidnightFromYMD(startYMD);
+    const now = todayLocalMidnight();
+    const diffMs = now - start;
+    return Math.floor(diffMs / 86400000) + 1; // Day 1 = START_DATE
+  }
 
-  // --- elements ---
-  const gate = byId("gate");
+  function fmtTR(ymd){
+    const [y,m,d] = ymd.split("-").map(Number);
+    const dt = new Date(y, m-1, d);
+    return dt.toLocaleDateString("tr-TR", { day:"2-digit", month:"long" });
+  }
+
+  function listRange(startYMD, endYMD){
+    const s = localMidnightFromYMD(startYMD);
+    const e = localMidnightFromYMD(endYMD);
+    const out = [];
+    for(let t = new Date(s); t <= e; t = new Date(t.getTime()+86400000)){
+      const y = t.getFullYear();
+      const m = String(t.getMonth()+1).padStart(2,"0");
+      const d = String(t.getDate()).padStart(2,"0");
+      out.push(`${y}-${m}-${d}`);
+    }
+    return out;
+  }
+
+  // elements
   const nameInput = byId("nameInput");
   const enterBtn = byId("enterBtn");
   const gateMsg = byId("gateMsg");
@@ -287,7 +570,6 @@
   const msgTitle = byId("msgTitle");
   const msgTag = byId("msgTag");
   const msgText = byId("msgText");
-
   const grid = byId("grid");
 
   const bar = byId("bar");
@@ -299,19 +581,95 @@
   const petal = byId("petal");
   const center = byId("center");
 
-  const start = localMidnightFromYMD(START_DATE);
+  // modal
+  const modalBack = byId("modalBack");
+  const closeBtn = byId("closeBtn");
+  const modalTitle = byId("modalTitle");
+  const modalNote = byId("modalNote");
+  const modalImg = byId("modalImg");
 
-  function computeDay(){
-    const now = todayLocalMidnight();
-    const diffMs = now - start;
-    const diffDays = Math.floor(diffMs / 86400000) + 1; // Day 1 starts at START_DATE
-    return diffDays;
+  let unlocked = false;
+  let selectedDay = 1;
+
+  function openModal(ymd){
+    const title = `${fmtTR(ymd)}${TOGETHER_DATES.includes(ymd) ? " 💗" : ""}`;
+    modalTitle.textContent = title;
+
+    const note = TOGETHER_NOTES[ymd] ? TOGETHER_NOTES[ymd] : "Bu gün için küçük bir not ekleyebilirsin 🙂";
+    modalNote.textContent = note;
+
+    const imgPath = PHOTO_BY_DATE[ymd];
+    if(imgPath){
+      modalImg.src = imgPath;
+      modalImg.style.display = "block";
+    } else {
+      modalImg.removeAttribute("src");
+      modalImg.style.display = "none";
+    }
+
+    modalBack.style.display = "flex";
+    modalBack.setAttribute("aria-hidden","false");
+  }
+
+  function closeModal(){
+    modalBack.style.display = "none";
+    modalBack.setAttribute("aria-hidden","true");
+  }
+
+  closeBtn.addEventListener("click", closeModal);
+  modalBack.addEventListener("click", (e)=>{ if(e.target === modalBack) closeModal(); });
+  document.addEventListener("keydown", (e)=>{ if(e.key === "Escape") closeModal(); });
+
+  function renderMemories(){
+    const el = byId("timelineText");
+    if(!el) return;
+
+    el.textContent = MEMORY_EVENTS
+      .sort((a,b)=> a.date.localeCompare(b.date))
+      .map(ev => `• ${fmtTR(ev.date)} — ${ev.title}\n  ${ev.note}`)
+      .join("\n\n");
+  }
+
+  function renderTogetherCalendar(){
+    const grid = byId("togetherGrid");
+    if(!grid) return;
+
+    const all = listRange(TOGETHER_RANGE_START, TOGETHER_RANGE_END);
+    const set = new Set(TOGETHER_DATES);
+
+    grid.innerHTML = "";
+    for(const ymd of all){
+      const b = document.createElement("div");
+      const isTogether = set.has(ymd);                 // birlikte olunan günler
+      const isHeart = HEART_DATES.includes(ymd);       // sadece 2 özel gün
+      const hasPhoto = Boolean(PHOTO_BY_DATE[ymd]);
+
+      b.className = "d" + ((isTogether || isHeart) ? " active" : "") + (hasPhoto ? " hasPhoto" : "");
+
+      const dayNum = ymd.slice(8,10);
+
+      // Öncelik: 💗 (özel) > 👭 (birlikte) > sade sayı
+      if (isHeart) {
+        b.textContent = `💗 ${dayNum}`;
+      } else if (isTogether) {
+        b.textContent = `👭 ${dayNum}`;
+      } else {
+        b.textContent = dayNum;
+      }
+
+      // hover
+      const note = TOGETHER_NOTES[ymd] ? ` — ${TOGETHER_NOTES[ymd]}` : "";
+      const badge = isHeart ? " 💗" : (isTogether ? " 👭" : "");
+      b.title = `${fmtTR(ymd)}${badge}${note}${hasPhoto ? " (foto var)" : ""}`;
+
+      // click -> modal
+      b.onclick = () => openModal(ymd);
+
+      grid.appendChild(b);
+    }
   }
 
   function render(){
-    const dayNow = computeDay();
-
-    // start date pill
     datePill.textContent = "Başlangıç: " + START_DATE;
 
     if(!unlocked){
@@ -328,12 +686,16 @@
       return;
     }
 
-    // before start date
+    const dayNow = computeDay(START_DATE);
+
     if(dayNow <= 0){
       const daysTo = Math.abs(dayNow) + 1;
       msgTitle.textContent = "Henüz zamanı değil 😌";
       msgTag.textContent = "Başlamasına: " + daysTo + " gün";
-      msgText.textContent = "Bu sayfa, doğru gün geldiğinde açılacak.\nAma şimdiden şunu söyleyeyim:\nSen olmasaydın çalışmazdı.";
+      msgText.textContent =
+        "Bu sayfa, doğru gün geldiğinde açılacak.\n" +
+        "Ama şimdiden şunu söyleyeyim:\n" +
+        "Sen olmasaydın çalışmazdı.";
       dayPill.textContent = "Gün: 0";
       leftPill.textContent = "Kalan: " + DAYS;
       bar.style.width = "0%";
@@ -347,24 +709,20 @@
     const available = clamp(dayNow, 1, DAYS);
     selectedDay = clamp(selectedDay, 1, available);
 
-    // progress + pills
     dayPill.textContent = "Gün: " + available + "/" + DAYS;
     leftPill.textContent = "Kalan: " + (DAYS - available);
     bar.style.width = (available / DAYS * 100).toFixed(1) + "%";
 
-    // flower growth
     const grow = 0.10 + (available / DAYS) * 0.90;
     const bloom = 0.12 + (available / DAYS) * 0.88;
     stem.style.setProperty("--grow", grow.toFixed(3));
     petal.style.setProperty("--bloom", bloom.toFixed(3));
     center.style.setProperty("--bloom", bloom.toFixed(3));
 
-    // message area
     msgTitle.textContent = "Gün " + selectedDay;
     msgTag.textContent = selectedDay === available ? "Bugünün mesajı" : "Önceki gün";
     msgText.textContent = M[selectedDay-1];
 
-    // grid
     grid.innerHTML = "";
     for(let i=1;i<=DAYS;i++){
       const b = document.createElement("div");
@@ -383,10 +741,7 @@
     const typed = norm(nameInput.value);
     const target = norm(HER_NAME);
 
-    // “Sen olmasaydın çalışmazdı” hissi:
-    // Eğer adı tutarsa ekstra tatlı bir efekt; tutmazsa yine de açıyoruz (kırmayalım diye).
     unlocked = true;
-
     if(typed && typed === target){
       gateMsg.textContent = "Bileşen bulundu: " + typed + " ✅";
     } else if(typed){
@@ -395,12 +750,17 @@
       gateMsg.textContent = "Bileşen bulundu ✅";
     }
 
+    renderMemories();
+    renderTogetherCalendar();
     render();
   }
 
   enterBtn.addEventListener("click", tryEnter);
   nameInput.addEventListener("keydown", (e)=>{ if(e.key==="Enter") tryEnter(); });
 
+  // ilk yükleme
+  renderMemories();
+  renderTogetherCalendar();
   render();
 </script>
 </body>
